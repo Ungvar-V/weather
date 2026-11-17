@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T18:01:26.239869+00:00",
+  "updated_at": "2026-11-17T18:05:56.603019+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -560,7 +560,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-17T20:01:26.239869+02:00",
+    "checked_at": "2026-11-17T20:05:56.603019+02:00",
     "items": [
       {
         "text": "НМЯ І: Ввечері 17 листопада та вночі 18 листопада на більшій частині території Закарпатської області очікуються значні дощі (15-29 мм / 12 год чи менше), подекуди сильні дощі (30-49 мм / 12 год чи менше). Вдень 17 листопада та вночі 18 листопада переважно на високогір'ї посилення вітру 15-20 м/с, налипання мокрого снігу (діаметр 11-34 мм) (І рівень небезпечності, жовтий).",
@@ -573,9 +573,110 @@
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-17T18:01:26.813218+00:00",
+    "checked_at": "2026-11-17T18:05:57.734053+00:00",
     "code": 61,
     "is_day": false,
     "valid_at": "2026-11-17T18:00:00+00:00"
-  }
+  },
+  "city_stations": [
+    {
+      "id": 21050,
+      "source": "https://www.saveecobot.com/station/21050.json",
+      "status": "ok",
+      "sensor_name": "вулиця Ф. Тихого 17",
+      "latitude": "48.614841137956",
+      "longitude": "22.296348480165",
+      "platform_name": "ЛУН Місто",
+      "aqi": 29,
+      "aqi_is_old": false,
+      "aqi_updated_at": "2026-11-17 19:00:00",
+      "last_data": [
+        {
+          "phenomenon": "pm25",
+          "value": 5.89,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        },
+        {
+          "phenomenon": "temperature",
+          "value": 10.944,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        },
+        {
+          "phenomenon": "humidity",
+          "value": 84.166,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        }
+      ],
+      "checked_at": "2026-11-17T18:05:58.668835+00:00"
+    },
+    {
+      "id": 23257,
+      "source": "https://www.saveecobot.com/station/23257.json",
+      "status": "ok",
+      "sensor_name": "Д.Снігурського 2",
+      "latitude": "48.61748339562",
+      "longitude": "22.263592633062",
+      "platform_name": "ЛУН Місто",
+      "aqi": 13,
+      "aqi_is_old": false,
+      "aqi_updated_at": "2026-11-17 19:00:00",
+      "last_data": [
+        {
+          "phenomenon": "pm25",
+          "value": 2.522,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        },
+        {
+          "phenomenon": "temperature",
+          "value": 10.901,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        },
+        {
+          "phenomenon": "humidity",
+          "value": 87.442,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        }
+      ],
+      "checked_at": "2026-11-17T18:05:58.648407+00:00"
+    },
+    {
+      "id": 21765,
+      "source": "https://www.saveecobot.com/station/21765.json",
+      "status": "ok",
+      "sensor_name": "вулиця Лучкая 10",
+      "latitude": "48.624323038432",
+      "longitude": "22.301197092573",
+      "platform_name": "ЛУН Місто",
+      "aqi": 56,
+      "aqi_is_old": false,
+      "aqi_updated_at": "2026-11-17 19:00:00",
+      "last_data": [
+        {
+          "phenomenon": "pm25",
+          "value": 16.17,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        },
+        {
+          "phenomenon": "temperature",
+          "value": 10.383,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        },
+        {
+          "phenomenon": "humidity",
+          "value": 96.332,
+          "updated_at": "2026-11-17 20:03:00",
+          "is_old": false
+        }
+      ],
+      "checked_at": "2026-11-17T18:05:58.667626+00:00"
+    }
+  ]
 }
