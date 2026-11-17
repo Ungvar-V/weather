@@ -283,10 +283,14 @@ body { margin:0; color:#e8edf5; background:radial-gradient(ellipse at 12% 0%,#1b
 #weather-system #city-weather .cw-section { background:#171c29; }
 #weather-system #forecast-status:not(:empty) { margin-bottom:12px; }
 #weather-system .history-chart { height:270px; position:relative; }
-#weather-system .history-scroll { overflow-x:auto; }
-#weather-system .history-scroll table { width:100%; border-collapse:collapse; font-size:13px; }
-#weather-system .history-scroll th, #weather-system .history-scroll td { text-align:left; padding:10px 8px; white-space:nowrap; border-bottom:1px solid var(--ws-border); font-variant-numeric:tabular-nums; }
-#weather-system .history-scroll th { color:var(--ws-muted); font-size:11px; font-weight:500; }
+#weather-system .history-scroll { overflow:auto; max-height:400px; }
+#weather-system .history-scroll table { width:100%; border-collapse:collapse; font:400 .85rem 'JetBrains Mono',monospace; }
+#weather-system .history-scroll th, #weather-system .history-scroll td { text-align:left; padding:10px 12px; white-space:nowrap; border-bottom:1px solid #ffffff0a; font-variant-numeric:tabular-nums; }
+#weather-system .history-scroll th { position:sticky; top:0; z-index:1; padding:11px 12px; background:#141a28; color:#8b9bb4; font-size:.7rem; font-weight:500; text-transform:uppercase; letter-spacing:.05em; border-bottom-color:#ffffff14; }
+#weather-system .history-scroll tr:hover td { background:#5b9dff0f; }
+#weather-system .history-temp-pos { color:#ff8b5c; font-weight:600; }
+#weather-system .history-temp-neg { color:#5cc8ff; font-weight:600; }
+#weather-system .history-precip { display:inline-block; padding:2px 8px; border-radius:999px; font-size:.72rem; background:#3dd68c26; color:#3dd68c; }
 #weather-system .site-footer { padding-top:22px; text-align:center; color:var(--ws-muted); font-size:12px; }
 #weather-system .ws-day .ws-day-date { font-size:11px; }
 #weather-system .ws-week-columns { font-size:11px; }
@@ -556,11 +560,6 @@ body { margin:0; color:#e8edf5; background:radial-gradient(ellipse at 12% 0%,#1b
         meta.append(stormSourceLink());
         card.append(heading, stormMessage(item.text), meta);
         notice.append(card);
-      }
-      for (const item of (warnings?.unparsed || [])) {
-        const note = stormElement('article', '', 'storm-warning');
-        note.append(stormElement('h2', 'Запис ЦГМ · термін дії не визначено'), stormMessage(item.text || ''), stormElement('p', 'Випущено ' + (item.issued || '—') + '. Чинність цього запису не підтверджено.', 'storm-meta'), stormSourceLink());
-        notice.append(note);
       }
       notice.hidden = !notice.childElementCount;
     }
@@ -860,7 +859,16 @@ body { margin:0; color:#e8edf5; background:radial-gradient(ellipse at 12% 0%,#1b
       const item=element('div');item.append(element('dt',label),element('dd',value));stats.append(item);
     }
     const table=document.getElementById('tbody');table.replaceChildren();
-    for(const row of rows){const tr=element('tr');for(const value of [row.dt,format(row.temp),format(row.dew),row.precip||'—',format(row.pressure),format(row.wind_speed)+' · '+windDir(row.wind_dir),row.rad||'—'])tr.append(element('td',value));table.append(tr);}
+    for(const row of rows){
+      const tr=element('tr');
+      for(const [index,value] of [row.dt,format(row.temp),format(row.dew),row.precip||'—',format(row.pressure),format(row.wind_speed)+' · '+windDir(row.wind_dir),row.rad||'—'].entries()){
+        const cell=element('td',value);
+        if(index===1 && number(row.temp)!==null)cell.className=number(row.temp)>=0?'history-temp-pos':'history-temp-neg';
+        if(index===3 && row.precip)cell.replaceChildren(element('span',value,'history-precip'));
+        tr.append(cell);
+      }
+      table.append(tr);
+    }
     if(!window.Chart)return;
     if(historyChart)historyChart.destroy();
     const ordered=[...rows].reverse();
