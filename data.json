@@ -1,7 +1,17 @@
 {
-  "updated_at": "2026-11-17T18:05:56.603019+00:00",
+  "updated_at": "2026-11-17T18:15:46.269061+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
+    {
+      "dt": "17.11.2026 20:00",
+      "temp": "8.3",
+      "dew": "8.0",
+      "precip": "11.0 (12)",
+      "pressure": "997.4",
+      "wind_dir": "340",
+      "wind_speed": "1",
+      "rad": null
+    },
     {
       "dt": "17.11.2026 17:00",
       "temp": "7.3",
@@ -560,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-17T20:05:56.603019+02:00",
+    "checked_at": "2026-11-17T20:15:46.269061+02:00",
     "items": [
       {
         "text": "НМЯ І: Ввечері 17 листопада та вночі 18 листопада на більшій частині території Закарпатської області очікуються значні дощі (15-29 мм / 12 год чи менше), подекуди сильні дощі (30-49 мм / 12 год чи менше). Вдень 17 листопада та вночі 18 листопада переважно на високогір'ї посилення вітру 15-20 м/с, налипання мокрого снігу (діаметр 11-34 мм) (І рівень небезпечності, жовтий).",
@@ -573,10 +583,10 @@
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-17T18:05:57.734053+00:00",
-    "code": 61,
+    "checked_at": "2026-11-17T18:15:48.370511+00:00",
+    "code": 55,
     "is_day": false,
-    "valid_at": "2026-11-17T18:00:00+00:00"
+    "valid_at": "2026-11-17T18:15:00+00:00"
   },
   "city_stations": [
     {
@@ -593,24 +603,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 5.89,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 4.458,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 10.944,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 10.858,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 84.166,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 83.878,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-17T18:05:58.668835+00:00"
+      "checked_at": "2026-11-17T18:15:49.293965+00:00"
     },
     {
       "id": 23257,
@@ -626,24 +636,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.522,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 2.505,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 10.901,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 10.873,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 87.442,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 87.773,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-17T18:05:58.648407+00:00"
+      "checked_at": "2026-11-17T18:15:49.345474+00:00"
     },
     {
       "id": 21765,
@@ -659,24 +669,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 16.17,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 15.323,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 10.383,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 10.401,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 96.332,
-          "updated_at": "2026-11-17 20:03:00",
+          "value": 95.823,
+          "updated_at": "2026-11-17 20:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-17T18:05:58.667626+00:00"
+      "checked_at": "2026-11-17T18:15:49.301883+00:00"
     }
   ]
 }
