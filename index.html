@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ужгород · Метеостанція</title>
+  <meta name="description" content="Живі дані метеостанції Ужгород (Закарпатський ЦГМ)" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --card: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.08);
+      --text: #e8edf5;
+      --muted: #8b9bb4;
+      --accent: #5b9dff;
+      --accent2: #7c5cff;
+      --warm: #ff8b5c;
+      --cold: #5cc8ff;
+      --green: #3dd68c;
+      --red: #ff6b6b;
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(91,157,255,0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(124,92,255,0.12), transparent);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+    header {
+      display: flex; flex-wrap: wrap; align-items: flex-end;
+      justify-content: space-between; gap: 16px; margin-bottom: 28px;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center; font-size: 24px;
+      box-shadow: 0 4px 20px rgba(91,157,255,0.35);
+    }
+    h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+    .subtitle { color: var(--muted); font-size: 0.88rem; margin-top: 2px; }
+    .status-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .pill {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: var(--muted); background: var(--card);
+      border: 1px solid var(--card-border); padding: 7px 13px; border-radius: 999px;
+    }
+    .pill.live { color: var(--green); border-color: rgba(61,214,140,0.3); }
+    .pill.err { color: var(--red); border-color: rgba(255,107,107,0.3); }
+    .hero {
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; margin-bottom: 22px;
+    }
+    @media (max-width: 780px) { .hero { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 24px;
+      backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .temp-card { position: relative; overflow: hidden; }
+    .temp-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(91,157,255,0.12), rgba(124,92,255,0.08));
+      pointer-events: none;
+    }
+    .temp-main { position: relative; display: flex; align-items: flex-start; gap: 6px; }
+    .temp-value {
+      font-size: 5rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1;
+      background: linear-gradient(180deg, #fff 30%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .temp-unit { font-size: 1.7rem; font-weight: 500; color: var(--muted); margin-top: 10px; }
+    .temp-meta {
+      position: relative; margin-top: 16px;
+      display: flex; flex-wrap: wrap; gap: 14px 26px;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .meta-label {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+    }
+    .meta-value { font-size: 1.1rem; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: 100%; }
+    .stat {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 15px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .stat-icon { font-size: 1.25rem; margin-bottom: 5px; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 3px; }
+    .stat-value { font-size: 1.25rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+    .section-title {
+      font-size: 1.02rem; font-weight: 600; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title span {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+    .chart-card { margin-bottom: 22px; }
+    .chart-wrap { position: relative; height: 270px; }
+    .forecast-card { margin-bottom: 22px; }
+    .forecast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 640px) { .forecast-grid { grid-template-columns: 1fr; } }
+    .forecast-block {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 16px;
+    }
+    .forecast-block h3 { font-size: 0.92rem; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
+    .forecast-block p { font-size: 0.9rem; opacity: 0.92; line-height: 1.55; }
+    .table-scroll { overflow: auto; max-height: 400px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
+    th {
+      text-align: left; padding: 11px 12px; color: var(--muted); font-weight: 500;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+      position: sticky; top: 0; background: #141a28; border-bottom: 1px solid var(--card-border); z-index: 1;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    tr:hover td { background: rgba(91,157,255,0.06); }
+    .temp-pos { color: var(--warm); font-weight: 600; }
+    .temp-neg { color: var(--cold); font-weight: 600; }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.72rem;
+      background: rgba(61,214,140,0.15); color: var(--green);
+    }
+    footer { margin-top: 36px; text-align: center; color: var(--muted); font-size: 0.8rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+    .loading { opacity: 0.4; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">🌤</div>
+        <div>
+          <h1>Ужгород · Метеостанція</h1>
+          <div class="subtitle">Закарпатський ЦГМ · StNo 33631</div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <div class="pill" id="statusPill">завантаження…</div>
+        <div class="pill" id="updatedPill">—</div>
+      </div>
+    </header>
+
+    <div id="main" class="loading">
+      <div class="hero">
+        <div class="card temp-card">
+          <div class="temp-main">
+            <div class="temp-value" id="temp">—</div>
+            <div class="temp-unit">°C</div>
+          </div>
+          <div class="temp-meta">
+            <div class="meta-item">
+              <span class="meta-label">Час виміру</span>
+              <span class="meta-value" id="dt">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Точка роси</span>
+              <span class="meta-value" id="dew">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Відчувається</span>
+              <span class="meta-value" id="feels">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-icon">🔽</div>
+            <div class="stat-label">Тиск</div>
+            <div class="stat-value" id="pressure">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon">💨</div>
+            <div class="stat-label">Вітер</div>
+            <div class="stat-value" id="wind">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon">☢️</div>
+            <div class="stat-label">Рад. фон</div>
+            <div class="stat-value" id="rad">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon">🌧</div>
+            <div class="stat-label">Опади</div>
+            <div class="stat-value" id="precip">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="section-title"><span></span> Температура та тиск</div>
+        <div class="chart-wrap"><canvas id="tempChart"></canvas></div>
+      </div>
+
+      <div class="card forecast-card">
+        <div class="section-title"><span></span> Прогноз погоди</div>
+        <div class="forecast-grid">
+          <div class="forecast-block">
+            <h3>📍 м. Ужгород</h3>
+            <p id="fc-uzh">—</p>
+          </div>
+          <div class="forecast-block">
+            <h3>🏔 Закарпатська область</h3>
+            <p id="fc-region">—</p>
+          </div>
+        </div>
+        <div class="forecast-block" style="margin-top:14px">
+          <h3>📅 На наступні дні</h3>
+          <p id="fc-next">—</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span></span> Історія спостережень</div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Дата і час</th>
+                <th>Темп.</th>
+                <th>Точка роси</th>
+                <th>Опади</th>
+                <th>Тиск</th>
+                <th>Вітер</th>
+                <th>Рад. фон</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Дані: <a href="http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631" target="_blank">Закарпатський ЦГМ</a> ·
+      Оновлення автоматичне · GitHub Pages
+    </footer>
+  </div>
+
+  <script>
+    let chart = null;
+
+    function num(v) {
+      if (v == null || v === '') return null;
+      const n = parseFloat(String(v).replace(',', '.'));
+      return isNaN(n) ? null : n;
+    }
+
+    function formatTemp(v) {
+      const n = num(v);
+      if (n === null) return '—';
+      return (n > 0 ? '+' : '') + n.toFixed(1);
+    }
+
+    function windDirText(deg) {
+      const d = num(deg);
+      if (d === null) return '—';
+      const dirs = ['Пн','ПнСх','Сх','ПдСх','Пд','ПдЗх','Зх','ПнЗх'];
+      return dirs[Math.round(d / 45) % 8] + ' ' + d + '°';
+    }
+
+    function setStatus(ok, msg) {
+      const pill = document.getElementById('statusPill');
+      pill.textContent = msg;
+      pill.className = 'pill ' + (ok ? 'live' : 'err');
+    }
+
+    function render(payload) {
+      const rows = payload.data || [];
+      const fc = payload.forecast || {};
+      if (!rows.length) {
+        setStatus(false, 'немає даних');
+        return;
+      }
+
+      const latest = rows[0];
+      document.getElementById('temp').textContent = formatTemp(latest.temp);
+      document.getElementById('dt').textContent = latest.dt;
+      document.getElementById('dew').textContent = formatTemp(latest.dew) + '°';
+
+      const t = num(latest.temp);
+      const w = num(latest.wind_speed) || 0;
+      let feels = t;
+      if (t !== null && t < 10 && w > 1) feels = t - w * 0.55;
+      document.getElementById('feels').textContent = feels !== null ? formatTemp(feels) + '°' : '—';
+
+      document.getElementById('pressure').innerHTML =
+        (num(latest.pressure) ?? '—') + ' <small style="font-size:0.7em;color:var(--muted)">гПа</small>';
+      document.getElementById('wind').textContent =
+        (num(latest.wind_speed) ?? '0') + ' м/с · ' + windDirText(latest.wind_dir);
+      document.getElementById('rad').innerHTML =
+        (latest.rad || '—') + ' <small style="font-size:0.7em;color:var(--muted)">мкР/год</small>';
+      document.getElementById('precip').textContent = latest.precip || 'немає';
+
+      // час оновлення файлу
+      let updatedLabel = latest.dt;
+      if (payload.updated_at) {
+        try {
+          const d = new Date(payload.updated_at);
+          updatedLabel = d.toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv' });
+        } catch (_) {}
+      }
+      document.getElementById('updatedPill').textContent = 'оновлено: ' + updatedLabel;
+
+      document.getElementById('fc-uzh').textContent = fc.uzh || '—';
+      document.getElementById('fc-region').textContent = fc.region || '—';
+      document.getElementById('fc-next').textContent = fc.next || '—';
+
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        const tVal = num(row.temp);
+        const cls = tVal === null ? '' : (tVal >= 0 ? 'temp-pos' : 'temp-neg');
+        tr.innerHTML = `
+          <td>${row.dt}</td>
+          <td class="${cls}">${formatTemp(row.temp)}</td>
+          <td>${formatTemp(row.dew)}</td>
+          <td>${row.precip ? '<span class="badge">' + row.precip + '</span>' : '—'}</td>
+          <td>${row.pressure || '—'}</td>
+          <td>${row.wind_speed || '0'} · ${windDirText(row.wind_dir)}</td>
+          <td>${row.rad || '—'}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      const labels = rows.map(r => r.dt.replace(/\d{4} /, '').replace(':00','')).reverse();
+      const temps = rows.map(r => num(r.temp)).reverse();
+      const pressures = rows.map(r => num(r.pressure)).reverse();
+
+      if (chart) chart.destroy();
+      const ctx = document.getElementById('tempChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Температура °C',
+              data: temps,
+              borderColor: '#5b9dff',
+              backgroundColor: 'rgba(91,157,255,0.12)',
+              fill: true, tension: 0.35, pointRadius: 2.5, pointHoverRadius: 6,
+              borderWidth: 2.5, yAxisID: 'y'
+            },
+            {
+              label: 'Тиск гПа',
+              data: pressures,
+              borderColor: 'rgba(124,92,255,0.7)',
+              backgroundColor: 'transparent',
+              tension: 0.35, pointRadius: 0, borderWidth: 1.5, borderDash: [4,3],
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: '#8b9bb4', font: { family: 'Outfit', size: 12 } } },
+            tooltip: {
+              backgroundColor: '#1a2235', titleColor: '#e8edf5', bodyColor: '#c5d0e0',
+              borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, padding: 12, cornerRadius: 10
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#8b9bb4', maxTicksLimit: 10, font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              position: 'left', ticks: { color: '#5b9dff' },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              title: { display: true, text: '°C', color: '#5b9dff' }
+            },
+            y1: {
+              position: 'right', ticks: { color: 'rgba(124,92,255,0.8)' },
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'гПа', color: 'rgba(124,92,255,0.8)' }
+            }
+          }
+        }
+      });
+
+      setStatus(true, '● online');
+      document.getElementById('main').classList.remove('loading');
+    }
+
+    async function load() {
+      try {
+        // cache-bust щоб завжди брати свіжий data.json після Actions
+        const res = await fetch('data.json?t=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const payload = await res.json();
+        render(payload);
+      } catch (e) {
+        setStatus(false, 'помилка завантаження');
+        console.error(e);
+      }
+    }
+
+    load();
+    // легке автооновлення сторінки раз на 10 хв (дані оновлює Actions)
+    setInterval(load, 600000);
+  </script>
+</body>
+</html>
