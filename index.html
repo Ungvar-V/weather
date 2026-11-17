@@ -122,28 +122,31 @@
     .chart-card { margin-bottom: 22px; }
     .chart-wrap { position: relative; height: 270px; }
     .forecast-card { margin-bottom: 22px; }
-    .forecast-grid, .forecast-days {
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;
+    .forecast-list { display: grid; gap: 10px; }
+    .forecast-days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .forecast-day:only-child { grid-column: 1 / -1; }
+    .forecast-place, .forecast-day {
+      padding: 14px 16px; border-radius: 12px; min-width: 0;
+      border: 1px solid var(--card-border); background: rgba(255,255,255,0.035);
     }
-    .forecast-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; }
-    .forecast-outlook { margin-top: 20px; }
-    .forecast-block h3, .forecast-outlook > h3 {
-      font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: var(--text);
+    .forecast-city {
+      background: #212d47; border-color: #364b6b;
     }
-    .forecast-day h4 { font-size: 0.95rem; color: #91baff; margin-bottom: 12px; }
-    .forecast-body { display: grid; gap: 10px; }
-    .forecast-body p { font-size: 0.93rem; font-weight: 400; color: #c7d2e3; line-height: 1.65; }
-    .forecast-body strong { color: var(--text); font-weight: 600; }
-    .forecast-body .forecast-alert {
-      border-left: 2px solid #e6aa68; padding-left: 10px; color: #f3d9b9;
-    }
-    .forecast-body .forecast-measurement { white-space: nowrap; }
-    @media (max-width: 720px) {
-      .forecast-grid, .forecast-days { grid-template-columns: 1fr; }
-    }
-    .forecast-block {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
-      border-radius: 14px; padding: 16px;
+    .forecast-outlook { margin-top: 16px; }
+    .forecast-outlook > h3 { font-size: 0.96rem; margin-bottom: 8px; }
+    .forecast-place h3, .forecast-day h4 { font-size: 0.96rem; margin-bottom: 6px; }
+    .forecast-day h4 { color: #9ac1ff; }
+    .forecast-copy p { color: #c7d2e3; font-size: 0.9rem; line-height: 1.6; }
+    .forecast-copy p + p { margin-top: 6px; }
+    .forecast-temperatures { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 8px; }
+    .forecast-temperatures > div { display: flex; align-items: baseline; gap: 5px; }
+    .forecast-temperatures dt { color: #b6c2d6; font-size: 0.75rem; }
+    .forecast-temperatures dd { font-size: 1rem; font-weight: 600; white-space: nowrap; }
+    .forecast-temperatures .forecast-daytime { color: #9ac1ff; }
+    .forecast-copy .forecast-mountains { color: var(--text); }
+    @media (max-width: 600px) {
+      .forecast-card { padding: 18px; }
+      .forecast-days { grid-template-columns: 1fr; }
     }
     .table-scroll { overflow: auto; max-height: 400px; }
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
@@ -236,19 +239,13 @@
 
       <div class="card forecast-card">
         <div class="section-title"><span></span> Прогноз погоди</div>
-        <div class="forecast-grid">
-          <div class="forecast-block">
-            <h3>Ужгород</h3>
-            <div class="forecast-body" id="fc-uzh"><p>—</p></div>
-          </div>
-          <div class="forecast-block">
-            <h3>Закарпатська область</h3>
-            <div class="forecast-body" id="fc-region"><p>—</p></div>
-          </div>
+        <div class="forecast-list">
+          <article class="forecast-place forecast-city" id="fc-uzh"></article>
+          <article class="forecast-place" id="fc-region"></article>
         </div>
         <section class="forecast-outlook" aria-labelledby="forecast-outlook-title">
           <h3 id="forecast-outlook-title">На наступні дні</h3>
-          <div id="fc-next"><div class="forecast-block forecast-body"><p>—</p></div></div>
+          <div class="forecast-list forecast-days" id="fc-next"></div>
         </section>
       </div>
 
@@ -307,61 +304,98 @@
       pill.className = 'pill ' + (ok ? 'live' : 'err');
     }
 
-    function renderForecastText(container, text) {
-      const sentences = (text?.trim() || '—').split(/(?<=[.!?])\s+(?=[А-ЯІЇЄҐ])/u);
+    function addForecastText(container, tag, text, className) {
+      const element = document.createElement(tag);
+      element.textContent = text;
+      if (className) element.className = className;
+      container.append(element);
+      return element;
+    }
 
-      for (const sentence of sentences) {
-        const paragraph = document.createElement('p');
-        if (/ожеледиц|хуртовин|налипан|сильн\S*\s+дощ/i.test(sentence)) {
-          paragraph.className = 'forecast-alert';
-        }
+    function forecastRange(value, qualifier) {
+      const bounds = value.split('–');
+      if (!qualifier && bounds.some(bound => !/^[+−-]/.test(bound) && Number(bound) !== 0)) return null;
+      return bounds.map(bound => {
+        if (/^[+−-]/.test(bound)) return bound.replace(/^-/, '−');
+        if (Number(bound) === 0) return '0';
+        return (qualifier === 'морозу' ? '−' : '+') + bound;
+      }).join('…') + '\u00a0°C';
+    }
 
-        const measurements = /[-−]?\d+(?:[.,]\d+)?(?:\s*[-–]\s*[-−]?\d+(?:[.,]\d+)?)?\s*(?:°(?:[ \u00a0]*[CС])?|м\s*\/\s*с)/gu;
-        let offset = 0;
-        for (const match of sentence.matchAll(measurements)) {
-          paragraph.append(sentence.slice(offset, match.index));
-          const value = document.createElement('strong');
-          value.className = 'forecast-measurement';
-          value.textContent = match[0].replace(/(\d)\s*-\s*(?=[-−]?\d)/g, '$1–');
-          paragraph.append(value);
-          offset = match.index + match[0].length;
+    function forecastTemperature(sentence) {
+      const match = sentence.match(/^Температура повітря вночі\s+([+−-]?\d+(?:–[+−-]?\d+)?)°(?:\s+(тепла|морозу))?,\s*вдень\s+([+−-]?\d+(?:–[+−-]?\d+)?)°(?:\s+(тепла|морозу))?(?:,\s*((?:вночі на високогір[’']ї|в горах|на високогір[’']ї)[^.]+))?\.?$/iu);
+      if (!match) return null;
+      const [, night, nightQualifier, day, dayQualifier, mountains] = match;
+      const nightValue = forecastRange(night, nightQualifier || (dayQualifier === 'тепла' ? 'тепла' : ''));
+      const dayValue = forecastRange(day, dayQualifier || (nightQualifier === 'тепла' ? 'тепла' : ''));
+      if (!nightValue || !dayValue) return null;
+      return { ranges: [nightValue, dayValue], mountains };
+    }
+
+    function renderForecastEntry(container, title, headingTag, source) {
+      const text = (source?.trim() || '—')
+        .replace(/(\d)\s*[-–]\s*(?=[+−-]?\d)/g, '$1–')
+        .replace(/(\d)\s+м\s*\/\s*с/gu, '$1\u00a0м/с');
+      const sentences = text.split(/(?<=[.!?])\s+(?=[А-ЯІЇЄҐ])/u);
+      const temperatureIndex = sentences.findIndex(sentence => /^Температура повітря/u.test(sentence));
+      const temperature = forecastTemperature(sentences[temperatureIndex] || '');
+      container.replaceChildren();
+      if (title) addForecastText(container, headingTag, title);
+      if (temperature) {
+        const values = document.createElement('dl');
+        values.className = 'forecast-temperatures';
+        for (const [index, label] of ['Вночі', 'Вдень'].entries()) {
+          const item = document.createElement('div');
+          addForecastText(item, 'dt', label);
+          addForecastText(item, 'dd', temperature.ranges[index], index ? 'forecast-daytime' : '');
+          values.append(item);
         }
-        paragraph.append(sentence.slice(offset));
-        container.append(paragraph);
+        container.append(values);
       }
+
+      const body = document.createElement('div');
+      body.className = 'forecast-copy';
+      for (const [index, sentence] of sentences.entries()) {
+        if (!temperature || index !== temperatureIndex) {
+          addForecastText(body, 'p', sentence);
+        } else if (temperature.mountains) {
+          const mountains = temperature.mountains;
+          addForecastText(body, 'p', mountains[0].toLocaleUpperCase('uk-UA') + mountains.slice(1) + '.', 'forecast-mountains');
+        }
+      }
+      container.append(body);
     }
 
     function renderForecastDays(container, source) {
       const text = source?.trim() || '—';
       const dates = [...text.matchAll(/(?:^|\s)(\d{1,2})\.(\d{2})\.(?=\s+[А-ЯІЇЄҐ])/gu)];
       const prefix = text.slice(0, dates[0]?.index ?? 0).trim();
+      const period = prefix.match(/^(\d{1,2}[-–]\d{1,2}\.\d{2}\.\d{4})\s*(?:р\.)?:$/u);
+      const entries = [];
 
-      if (!dates.length || (prefix && !/^\d{1,2}[-–]\d{1,2}\.\d{2}\.\d{4}\s*(?:р\.)?:$/u.test(prefix))) {
-        const block = document.createElement('div');
-        block.className = 'forecast-block forecast-body';
-        renderForecastText(block, text);
-        container.replaceChildren(block);
-        return;
+      if (!dates.length || (prefix && !period)) {
+        entries.push({ title: '', text });
+      } else {
+        for (const [index, date] of dates.entries()) {
+          const calendarDate = new Date(Date.UTC(2000, Number(date[2]) - 1, Number(date[1])));
+          const title = calendarDate.toLocaleDateString('uk-UA', {
+            day: 'numeric', month: 'long', timeZone: 'UTC'
+          });
+          const start = date.index + date[0].length;
+          entries.push({ title, text: text.slice(start, dates[index + 1]?.index) });
+        }
       }
 
-      const grid = document.createElement('div');
-      grid.className = 'forecast-days';
-      for (const [index, date] of dates.entries()) {
+      document.getElementById('forecast-outlook-title').textContent = period
+        ? 'На наступні дні · ' + period[1].replace('-', '–')
+        : 'На наступні дні';
+      container.replaceChildren();
+      for (const entry of entries) {
         const day = document.createElement('article');
-        day.className = 'forecast-block forecast-day';
-        const heading = document.createElement('h4');
-        const calendarDate = new Date(Date.UTC(2000, Number(date[2]) - 1, Number(date[1])));
-        heading.textContent = calendarDate.toLocaleDateString('uk-UA', {
-          day: 'numeric', month: 'long', timeZone: 'UTC'
-        });
-        const body = document.createElement('div');
-        body.className = 'forecast-body';
-        const start = date.index + date[0].length;
-        renderForecastText(body, text.slice(start, dates[index + 1]?.index));
-        day.append(heading, body);
-        grid.append(day);
+        day.className = 'forecast-day';
+        renderForecastEntry(day, entry.title, 'h4', entry.text);
+        container.append(day);
       }
-      container.replaceChildren(grid);
     }
 
     const stormSource = 'http://www.gmc.uzhgorod.ua/mstorm.php';
@@ -472,11 +506,8 @@
       }
       document.getElementById('updatedPill').textContent = 'оновлено: ' + updatedLabel;
 
-      for (const [id, text] of [['fc-uzh', fc.uzh], ['fc-region', fc.region]]) {
-        const container = document.getElementById(id);
-        container.replaceChildren();
-        renderForecastText(container, text);
-      }
+      renderForecastEntry(document.getElementById('fc-uzh'), 'Ужгород', 'h3', fc.uzh);
+      renderForecastEntry(document.getElementById('fc-region'), 'Закарпатська область', 'h3', fc.region);
       renderForecastDays(document.getElementById('fc-next'), fc.next);
 
       const tbody = document.getElementById('tbody');
