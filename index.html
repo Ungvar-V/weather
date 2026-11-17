@@ -57,7 +57,7 @@
     .storm-notice { margin-bottom: 18px; }
     .storm-notice[hidden] { display: none; }
     .storm-warning {
-      padding: 12px 16px; border: 1px solid var(--card-border);
+      padding: 18px 20px; border: 1px solid var(--card-border);
       border-left: 3px solid var(--storm-color, var(--muted)); border-radius: 14px;
       background: var(--storm-bg, var(--card));
     }
@@ -65,11 +65,14 @@
     .storm-warning[data-level="1"] { --storm-color: #f3c969; --storm-bg: #2b2630; }
     .storm-warning[data-level="2"] { --storm-color: #ffab75; --storm-bg: #32252b; }
     .storm-warning[data-level="3"] { --storm-color: #ff9296; --storm-bg: #34242d; }
-    .storm-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 12px; margin-bottom: 4px; }
+    .storm-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 12px; }
     .storm-heading h2 { font-size: 1rem; font-weight: 600; }
     .storm-level, .storm-source { color: var(--storm-color, var(--accent)); font-size: 0.8rem; }
-    .storm-message { white-space: pre-line; font-size: 0.9rem; line-height: 1.6; }
-    .storm-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 5px; color: #ccd2df; font-size: 0.8rem; }
+    .storm-level { padding: 2px 8px; border-radius: 6px; background: rgba(255,255,255,0.04); }
+    .storm-message { max-width: 86ch; font-size: 0.94rem; line-height: 1.7; }
+    .storm-message p + p { margin-top: 10px; }
+    .storm-message strong { font-weight: 600; }
+    .storm-meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 13px; padding-top: 10px; border-top: 1px solid var(--card-border); color: #b6b4bd; font-size: 0.8rem; }
     .storm-source { text-underline-offset: 3px; }
     .storm-status { color: var(--muted); font-size: 0.8rem; }
     .hero {
@@ -126,7 +129,7 @@
     .forecast-days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .forecast-day:only-child { grid-column: 1 / -1; }
     .forecast-place, .forecast-day {
-      padding: 14px 16px; border-radius: 12px; min-width: 0;
+      padding: 18px; border-radius: 13px; min-width: 0;
       border: 1px solid var(--card-border); background: rgba(255,255,255,0.035);
     }
     .forecast-city {
@@ -134,16 +137,23 @@
     }
     .forecast-outlook { margin-top: 16px; }
     .forecast-outlook > h3 { font-size: 0.96rem; margin-bottom: 8px; }
-    .forecast-place h3, .forecast-day h4 { font-size: 0.96rem; margin-bottom: 6px; }
+    .forecast-place h3, .forecast-day h4 { font-size: 0.96rem; margin-bottom: 0; }
+    .forecast-header {
+      display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center;
+      gap: 12px 20px; padding-bottom: 12px; margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .forecast-day .forecast-header { display: grid; gap: 8px; }
     .forecast-day h4 { color: #9ac1ff; }
-    .forecast-copy p { color: #c7d2e3; font-size: 0.9rem; line-height: 1.6; }
-    .forecast-copy p + p { margin-top: 6px; }
-    .forecast-temperatures { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 8px; }
-    .forecast-temperatures > div { display: flex; align-items: baseline; gap: 5px; }
-    .forecast-temperatures dt { color: #b6c2d6; font-size: 0.75rem; }
-    .forecast-temperatures dd { font-size: 1rem; font-weight: 600; white-space: nowrap; }
+    .forecast-copy { max-width: 76ch; }
+    .forecast-copy p { color: #bdc7d8; font-size: 0.9rem; line-height: 1.65; }
+    .forecast-copy p + p { margin-top: 8px; }
+    .forecast-temperatures { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+    .forecast-temperatures > div { display: block; }
+    .forecast-temperatures dt { color: #a8b6cc; font-size: 0.72rem; }
+    .forecast-temperatures dd { font-size: 1.08rem; font-weight: 600; white-space: nowrap; }
     .forecast-temperatures .forecast-daytime { color: #9ac1ff; }
-    .forecast-copy .forecast-mountains { color: var(--text); }
+    .forecast-copy .forecast-mountains { color: #bdc7d8; font-weight: 400; }
     @media (max-width: 600px) {
       .forecast-card { padding: 18px; }
       .forecast-days { grid-template-columns: 1fr; }
@@ -340,7 +350,9 @@
       const temperatureIndex = sentences.findIndex(sentence => /^Температура повітря/u.test(sentence));
       const temperature = forecastTemperature(sentences[temperatureIndex] || '');
       container.replaceChildren();
-      if (title) addForecastText(container, headingTag, title);
+      const header = document.createElement('header');
+      header.className = 'forecast-header';
+      if (title) addForecastText(header, headingTag, title);
       if (temperature) {
         const values = document.createElement('dl');
         values.className = 'forecast-temperatures';
@@ -350,19 +362,32 @@
           addForecastText(item, 'dd', temperature.ranges[index], index ? 'forecast-daytime' : '');
           values.append(item);
         }
-        container.append(values);
+        header.append(values);
       }
+      container.append(header);
 
       const body = document.createElement('div');
       body.className = 'forecast-copy';
+      let description = [];
+      function appendDescription() {
+        if (description.length) addForecastText(body, 'p', description.join(' '));
+        description = [];
+      }
       for (const [index, sentence] of sentences.entries()) {
-        if (!temperature || index !== temperatureIndex) {
-          addForecastText(body, 'p', sentence);
-        } else if (temperature.mountains) {
-          const mountains = temperature.mountains;
-          addForecastText(body, 'p', mountains[0].toLocaleUpperCase('uk-UA') + mountains.slice(1) + '.', 'forecast-mountains');
+        if (temperature && index === temperatureIndex) {
+          appendDescription();
+          if (temperature.mountains) {
+            const mountains = temperature.mountains;
+            addForecastText(body, 'p', mountains[0].toLocaleUpperCase('uk-UA') + mountains.slice(1) + '.', 'forecast-mountains');
+          }
+        } else if (/^Вітер(?:\s|$)/u.test(sentence)) {
+          appendDescription();
+          addForecastText(body, 'p', sentence, 'forecast-wind');
+        } else {
+          description.push(sentence);
         }
       }
+      appendDescription();
       container.append(body);
     }
 
@@ -416,6 +441,24 @@
       return link;
     }
 
+    function stormMessage(text) {
+      const body = stormElement('div', '', 'storm-message');
+      const paragraphs = text.trim().split(/\n+|(?<=[.!?])\s+(?=[А-ЯІЇЄҐ])/u);
+      const emphasis = /(?:значні|сильні)\s+дощі|налипання мокрого снігу|\d+[–-]\d+\s*м\/с/giu;
+      for (const paragraphText of paragraphs) {
+        const paragraph = document.createElement('p');
+        let offset = 0;
+        for (const match of paragraphText.matchAll(emphasis)) {
+          paragraph.append(paragraphText.slice(offset, match.index));
+          paragraph.append(stormElement('strong', match[0]));
+          offset = match.index + match[0].length;
+        }
+        paragraph.append(paragraphText.slice(offset));
+        body.append(paragraph);
+      }
+      return body;
+    }
+
     function renderStormWarnings(warnings) {
       const notice = document.getElementById('storm-notice');
       const checkedAt = Date.parse(warnings?.checked_at);
@@ -444,7 +487,7 @@
         const meta = stormElement('p', '', 'storm-meta');
         if (item.issued) meta.append(stormElement('span', 'Випущено ' + item.issued));
         meta.append(stormSourceLink());
-        card.append(heading, stormElement('p', item.text, 'storm-message'), meta);
+        card.append(heading, stormMessage(item.text), meta);
         notice.append(card);
       }
       notice.hidden = !notice.childElementCount;
