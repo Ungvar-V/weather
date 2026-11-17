@@ -104,14 +104,29 @@
     .chart-card { margin-bottom: 22px; }
     .chart-wrap { position: relative; height: 270px; }
     .forecast-card { margin-bottom: 22px; }
-    .forecast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 640px) { .forecast-grid { grid-template-columns: 1fr; } }
+    .forecast-grid, .forecast-days {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;
+    }
+    .forecast-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; }
+    .forecast-outlook { margin-top: 20px; }
+    .forecast-block h3, .forecast-outlook > h3 {
+      font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: var(--text);
+    }
+    .forecast-day h4 { font-size: 0.95rem; color: #91baff; margin-bottom: 12px; }
+    .forecast-body { display: grid; gap: 10px; }
+    .forecast-body p { font-size: 0.93rem; font-weight: 400; color: #c7d2e3; line-height: 1.65; }
+    .forecast-body strong { color: var(--text); font-weight: 600; }
+    .forecast-body .forecast-alert {
+      border-left: 2px solid #e6aa68; padding-left: 10px; color: #f3d9b9;
+    }
+    .forecast-body .forecast-measurement { white-space: nowrap; }
+    @media (max-width: 720px) {
+      .forecast-grid, .forecast-days { grid-template-columns: 1fr; }
+    }
     .forecast-block {
       background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
       border-radius: 14px; padding: 16px;
     }
-    .forecast-block h3 { font-size: 0.92rem; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
-    .forecast-block p { font-size: 0.9rem; opacity: 0.92; line-height: 1.55; }
     .table-scroll { overflow: auto; max-height: 400px; }
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
     th {
@@ -203,18 +218,18 @@
         <div class="section-title"><span></span> Прогноз погоди</div>
         <div class="forecast-grid">
           <div class="forecast-block">
-            <h3>📍 м. Ужгород</h3>
-            <p id="fc-uzh">—</p>
+            <h3>Ужгород</h3>
+            <div class="forecast-body" id="fc-uzh"><p>—</p></div>
           </div>
           <div class="forecast-block">
-            <h3>🏔 Закарпатська область</h3>
-            <p id="fc-region">—</p>
+            <h3>Закарпатська область</h3>
+            <div class="forecast-body" id="fc-region"><p>—</p></div>
           </div>
         </div>
-        <div class="forecast-block" style="margin-top:14px">
-          <h3>📅 На наступні дні</h3>
-          <p id="fc-next">—</p>
-        </div>
+        <section class="forecast-outlook" aria-labelledby="forecast-outlook-title">
+          <h3 id="forecast-outlook-title">На наступні дні</h3>
+          <div id="fc-next"><div class="forecast-block forecast-body"><p>—</p></div></div>
+        </section>
       </div>
 
       <div class="card">
@@ -272,6 +287,63 @@
       pill.className = 'pill ' + (ok ? 'live' : 'err');
     }
 
+    function renderForecastText(container, text) {
+      const sentences = (text?.trim() || '—').split(/(?<=[.!?])\s+(?=[А-ЯІЇЄҐ])/u);
+
+      for (const sentence of sentences) {
+        const paragraph = document.createElement('p');
+        if (/ожеледиц|хуртовин|налипан|сильн\S*\s+дощ/i.test(sentence)) {
+          paragraph.className = 'forecast-alert';
+        }
+
+        const measurements = /[-−]?\d+(?:[.,]\d+)?(?:\s*[-–]\s*[-−]?\d+(?:[.,]\d+)?)?\s*(?:°(?:[ \u00a0]*[CС])?|м\s*\/\s*с)/gu;
+        let offset = 0;
+        for (const match of sentence.matchAll(measurements)) {
+          paragraph.append(sentence.slice(offset, match.index));
+          const value = document.createElement('strong');
+          value.className = 'forecast-measurement';
+          value.textContent = match[0].replace(/(\d)\s*-\s*(?=[-−]?\d)/g, '$1–');
+          paragraph.append(value);
+          offset = match.index + match[0].length;
+        }
+        paragraph.append(sentence.slice(offset));
+        container.append(paragraph);
+      }
+    }
+
+    function renderForecastDays(container, source) {
+      const text = source?.trim() || '—';
+      const dates = [...text.matchAll(/(?:^|\s)(\d{1,2})\.(\d{2})\.(?=\s+[А-ЯІЇЄҐ])/gu)];
+      const prefix = text.slice(0, dates[0]?.index ?? 0).trim();
+
+      if (!dates.length || (prefix && !/^\d{1,2}[-–]\d{1,2}\.\d{2}\.\d{4}\s*(?:р\.)?:$/u.test(prefix))) {
+        const block = document.createElement('div');
+        block.className = 'forecast-block forecast-body';
+        renderForecastText(block, text);
+        container.replaceChildren(block);
+        return;
+      }
+
+      const grid = document.createElement('div');
+      grid.className = 'forecast-days';
+      for (const [index, date] of dates.entries()) {
+        const day = document.createElement('article');
+        day.className = 'forecast-block forecast-day';
+        const heading = document.createElement('h4');
+        const calendarDate = new Date(Date.UTC(2000, Number(date[2]) - 1, Number(date[1])));
+        heading.textContent = calendarDate.toLocaleDateString('uk-UA', {
+          day: 'numeric', month: 'long', timeZone: 'UTC'
+        });
+        const body = document.createElement('div');
+        body.className = 'forecast-body';
+        const start = date.index + date[0].length;
+        renderForecastText(body, text.slice(start, dates[index + 1]?.index));
+        day.append(heading, body);
+        grid.append(day);
+      }
+      container.replaceChildren(grid);
+    }
+
     function render(payload) {
       const rows = payload.data || [];
       const fc = payload.forecast || {};
@@ -309,9 +381,12 @@
       }
       document.getElementById('updatedPill').textContent = 'оновлено: ' + updatedLabel;
 
-      document.getElementById('fc-uzh').textContent = fc.uzh || '—';
-      document.getElementById('fc-region').textContent = fc.region || '—';
-      document.getElementById('fc-next').textContent = fc.next || '—';
+      for (const [id, text] of [['fc-uzh', fc.uzh], ['fc-region', fc.region]]) {
+        const container = document.getElementById(id);
+        container.replaceChildren();
+        renderForecastText(container, text);
+      }
+      renderForecastDays(document.getElementById('fc-next'), fc.next);
 
       const tbody = document.getElementById('tbody');
       tbody.innerHTML = '';
