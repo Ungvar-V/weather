@@ -3,7 +3,7 @@ name: Update weather data
 on:
   schedule:
     # кожні 30 хвилин
-    - cron: "*/30 * * * *"
+    - cron: "7,37 * * * *"
   workflow_dispatch:  # можна запустити вручну з вкладки Actions
 
 permissions:
