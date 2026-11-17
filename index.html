@@ -530,7 +530,7 @@ body { margin:0; color:#e8edf5; background:radial-gradient(ellipse at 12% 0%,#1b
       const notice = document.getElementById('storm-notice');
       const checkedAt = Date.parse(warnings?.checked_at);
       const now = Date.now();
-      const verified = warnings?.status === 'ok' && Array.isArray(warnings.items)
+      const verified = ['ok', 'partial'].includes(warnings?.status) && Array.isArray(warnings.items)
         && Number.isFinite(checkedAt) && now - checkedAt <= 2 * 60 * 60 * 1000;
       notice.replaceChildren();
 
@@ -539,10 +539,9 @@ body { margin:0; color:#e8edf5; background:radial-gradient(ellipse at 12% 0%,#1b
         status.append(stormSourceLink());
         notice.append(status);
         notice.hidden = false;
-        return;
       }
 
-      for (const item of warnings.items) {
+      for (const item of (warnings?.items || [])) {
         if (!(Date.parse(item.expires_at) > now) || typeof item.text !== 'string' || !item.text.trim()) continue;
         const card = stormElement('article', '', 'storm-warning');
         const heading = stormElement('div', '', 'storm-heading');
@@ -553,9 +552,15 @@ body { margin:0; color:#e8edf5; background:radial-gradient(ellipse at 12% 0%,#1b
         }
         const meta = stormElement('p', '', 'storm-meta');
         if (item.issued) meta.append(stormElement('span', 'Випущено ' + item.issued));
+        if (!verified) meta.append(stormElement('span', 'Останнє відоме чинне попередження · перевірка джерела не вдалася'));
         meta.append(stormSourceLink());
         card.append(heading, stormMessage(item.text), meta);
         notice.append(card);
+      }
+      for (const item of (warnings?.unparsed || [])) {
+        const note = stormElement('article', '', 'storm-warning');
+        note.append(stormElement('h2', 'Запис ЦГМ · термін дії не визначено'), stormMessage(item.text || ''), stormElement('p', 'Випущено ' + (item.issued || '—') + '. Чинність цього запису не підтверджено.', 'storm-meta'), stormSourceLink());
+        notice.append(note);
       }
       notice.hidden = !notice.childElementCount;
     }

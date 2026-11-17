@@ -130,7 +130,7 @@ def warning_text(fragment):
     return "\n".join(line for line in lines if line)
 
 
-def parse_warnings(html, now):
+def parse_warnings(html, now, unparsed=None):
     content = re.search(r'<div\b[^>]*\bid=["\']content["\'][^>]*>(.*?)<!--\s*start rightbar\s*-->', html, re.S | re.I)
     if not content or "МЕТЕОРОЛОГІЧНЕ ШТОРМОВЕ ПОПЕРЕДЖЕННЯ" not in warning_text(content[1]).upper():
         raise ValueError("Regional warning section missing")
@@ -149,6 +149,9 @@ def parse_warnings(html, now):
         dates = [parse_warning_date(match, issued.date()) for match in WARNING_DATE.finditer(message)]
         levels = {WARNING_LEVELS[level.upper().replace("І", "I")] for level in WARNING_LEVEL.findall(message)}
         if not dates:
+            if unparsed is not None:
+                unparsed.append({'text': message, 'issued': issued.strftime('%d.%m.%Y %H:%M')})
+                continue
             raise ValueError("Regional warning validity date not recognized")
         last_day = max(dates)
         if last_day < now.date():
@@ -171,8 +174,9 @@ def fetch_warnings(now):
     try:
         response = requests.get(WARNING_URL, timeout=15)
         response.raise_for_status()
-        status["items"] = parse_warnings(response.content.decode("cp1251"), now)
-        status["status"] = "ok"
+        status['unparsed'] = []
+        status["items"] = parse_warnings(response.content.decode("cp1251"), now, status['unparsed'])
+        status["status"] = 'partial' if status['unparsed'] else "ok"
     except (requests.RequestException, ValueError) as error:
         print(f"Warning bulletin unavailable: {error}", file=sys.stderr)
         status["status"] = "unavailable"
@@ -287,6 +291,15 @@ def main():
         rows = collect('data', station_job, [])
         forecast = collect('forecast', forecast_job, {})
         warnings = warning_job.result()
+        if warnings['status'] not in ('ok', 'partial'):
+            last_warning = previous.get('warnings', {})
+            warnings['items'] = [item for item in last_warning.get('items', [])
+                                 if isinstance(item, dict) and item.get('expires_at')
+                                 and datetime.fromisoformat(item['expires_at']) > now]
+            warnings['last_success_at'] = last_warning.get('last_success_at') or (
+                last_warning.get('checked_at') if last_warning.get('status') == 'ok' else None)
+        else:
+            warnings['last_success_at'] = warnings['checked_at']
         model = model_job.result()
         city_stations = [job.result() for job in city_jobs]
     scene = {'status': 'unavailable', 'checked_at': now.isoformat()}
