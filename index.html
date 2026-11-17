@@ -54,6 +54,24 @@
     }
     .pill.live { color: var(--green); border-color: rgba(61,214,140,0.3); }
     .pill.err { color: var(--red); border-color: rgba(255,107,107,0.3); }
+    .storm-notice { margin-bottom: 18px; }
+    .storm-notice[hidden] { display: none; }
+    .storm-warning {
+      padding: 12px 16px; border: 1px solid var(--card-border);
+      border-left: 3px solid var(--storm-color, var(--muted)); border-radius: 14px;
+      background: var(--storm-bg, var(--card));
+    }
+    .storm-warning + .storm-warning { margin-top: 8px; }
+    .storm-warning[data-level="1"] { --storm-color: #f3c969; --storm-bg: #2b2630; }
+    .storm-warning[data-level="2"] { --storm-color: #ffab75; --storm-bg: #32252b; }
+    .storm-warning[data-level="3"] { --storm-color: #ff9296; --storm-bg: #34242d; }
+    .storm-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 12px; margin-bottom: 4px; }
+    .storm-heading h2 { font-size: 1rem; font-weight: 600; }
+    .storm-level, .storm-source { color: var(--storm-color, var(--accent)); font-size: 0.8rem; }
+    .storm-message { white-space: pre-line; font-size: 0.9rem; line-height: 1.6; }
+    .storm-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 5px; color: #ccd2df; font-size: 0.8rem; }
+    .storm-source { text-underline-offset: 3px; }
+    .storm-status { color: var(--muted); font-size: 0.8rem; }
     .hero {
       display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; margin-bottom: 22px;
     }
@@ -162,6 +180,8 @@
         <div class="pill" id="updatedPill">—</div>
       </div>
     </header>
+
+    <section id="storm-notice" class="storm-notice" aria-label="Метеорологічні попередження" aria-live="polite" hidden></section>
 
     <div id="main" class="loading">
       <div class="hero">
@@ -344,6 +364,77 @@
       container.replaceChildren(grid);
     }
 
+    const stormSource = 'http://www.gmc.uzhgorod.ua/mstorm.php';
+    const stormLevels = { 1: 'I рівень · жовтий', 2: 'II рівень · помаранчевий', 3: 'III рівень · червоний' };
+
+    function stormElement(tag, text, className = '') {
+      const element = document.createElement(tag);
+      element.textContent = text;
+      element.className = className;
+      return element;
+    }
+
+    function stormSourceLink() {
+      const link = stormElement('a', 'Закарпатський ЦГМ ↗', 'storm-source');
+      link.href = stormSource;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      return link;
+    }
+
+    function renderStormWarnings(warnings) {
+      const notice = document.getElementById('storm-notice');
+      const checkedAt = Date.parse(warnings?.checked_at);
+      const now = Date.now();
+      const verified = warnings?.status === 'ok' && Array.isArray(warnings.items)
+        && Number.isFinite(checkedAt) && now - checkedAt <= 2 * 60 * 60 * 1000;
+      notice.replaceChildren();
+
+      if (!verified) {
+        const status = stormElement('p', 'Актуальність штормових попереджень не підтверджено. ', 'storm-status');
+        status.append(stormSourceLink());
+        notice.append(status);
+        notice.hidden = false;
+        return;
+      }
+
+      for (const item of warnings.items) {
+        if (!(Date.parse(item.expires_at) > now) || typeof item.text !== 'string' || !item.text.trim()) continue;
+        const card = stormElement('article', '', 'storm-warning');
+        const heading = stormElement('div', '', 'storm-heading');
+        heading.append(stormElement('h2', 'Штормове попередження'));
+        if (stormLevels[item.level]) {
+          card.dataset.level = item.level;
+          heading.append(stormElement('span', stormLevels[item.level], 'storm-level'));
+        }
+        const meta = stormElement('p', '', 'storm-meta');
+        if (item.issued) meta.append(stormElement('span', 'Випущено ' + item.issued));
+        meta.append(stormSourceLink());
+        card.append(heading, stormElement('p', item.text, 'storm-message'), meta);
+        notice.append(card);
+      }
+      notice.hidden = !notice.childElementCount;
+    }
+
+    async function loadStormWarnings(localWarnings) {
+      let warnings = localWarnings;
+      if (location.hostname === 'ungvar-v.github.io' && location.pathname.startsWith('/weather/')) {
+        try {
+          // Workflow commits update main even when GitHub Pages skips redeployment.
+          const url = 'https://raw.githubusercontent.com/Ungvar-V/weather/main/data.json?t=' + Date.now();
+          const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          const current = (await response.json()).warnings;
+          const currentCheck = Date.parse(current?.checked_at);
+          const localCheck = Date.parse(warnings?.checked_at);
+          if (Number.isFinite(currentCheck) && (!Number.isFinite(localCheck) || currentCheck >= localCheck)) warnings = current;
+        } catch (error) {
+          console.warn('Could not check current storm data:', error);
+        }
+      }
+      renderStormWarnings(warnings);
+    }
+
     function render(payload) {
       const rows = payload.data || [];
       const fc = payload.forecast || {};
@@ -468,16 +559,19 @@
     }
 
     async function load() {
+      let localWarnings;
       try {
         // cache-bust щоб завжди брати свіжий data.json після Actions
         const res = await fetch('data.json?t=' + Date.now());
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const payload = await res.json();
+        localWarnings = payload.warnings;
         render(payload);
       } catch (e) {
         setStatus(false, 'помилка завантаження');
         console.error(e);
       }
+      await loadStormWarnings(localWarnings);
     }
 
     load();
