@@ -169,6 +169,30 @@ def fetch_warnings(now):
     return status
 
 
+def fetch_weather_scene(now):
+    result = {"status": "unavailable", "checked_at": now.isoformat()}
+    try:
+        response = requests.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={"latitude": 48.62, "longitude": 22.30,
+                    "current": "weather_code,is_day", "timeformat": "unixtime"},
+            timeout=15,
+        )
+        response.raise_for_status()
+        current = response.json()["current"]
+        code = current["weather_code"]
+        daylight = current["is_day"]
+        valid_at = datetime.fromtimestamp(current["time"], timezone.utc)
+        if type(code) is not int or code not in range(100) or daylight not in (0, 1):
+            raise ValueError("Invalid scene conditions")
+        if not -900 <= (now - valid_at).total_seconds() <= 7200:
+            raise ValueError("Stale scene conditions")
+        result.update(status="ok", code=code, is_day=bool(daylight), valid_at=valid_at.isoformat())
+    except (requests.RequestException, ValueError, KeyError, TypeError, OverflowError) as error:
+        print(f"Weather scene unavailable: {error}", file=sys.stderr)
+    return result
+
+
 def main():
     print("Fetching station data…")
     rows = fetch_station()
@@ -180,12 +204,14 @@ def main():
     now = datetime.now(timezone.utc)
     print("Fetching storm warnings…")
     warnings = fetch_warnings(now.astimezone(ZoneInfo("Europe/Kyiv")))
+    scene = fetch_weather_scene(datetime.now(timezone.utc))
     payload = {
         "updated_at": now.isoformat(),
         "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
         "data": rows,
         "forecast": forecast,
         "warnings": warnings,
+        "weather_scene": scene,
     }
 
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
