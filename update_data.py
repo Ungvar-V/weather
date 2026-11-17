@@ -2,6 +2,7 @@
 """Стягує дані з gmc.uzhgorod.ua і зберігає data.json для дашборду."""
 
 import json
+import math
 import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -40,6 +41,7 @@ WARNING_NONE = re.compile(
 def fetch_station():
     url = "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631"
     r = requests.get(url, timeout=25)
+    r.raise_for_status()
     r.encoding = "windows-1251"
     matches = re.findall(
         r"(\d{2}\.\d{2}\.\d{4}\s+\d{1,2}:\d{2})</td><td>([^<]*)</td><td>([^<]*)</td>"
@@ -58,21 +60,25 @@ def fetch_station():
             "wind_speed": m[6].strip() or None,
             "rad": m[7].strip() or None,
         })
+    if not rows:
+        raise ValueError('Station observations missing')
     return rows
 
 
 def fetch_forecast():
     url = "http://www.gmc.uzhgorod.ua/metbul.php"
     r = requests.get(url, timeout=25)
+    r.raise_for_status()
     r.encoding = "windows-1251"
     text = r.text
     result = {"uzh": "—", "region": "—", "next": "—"}
 
     idx = text.find("ПРОГНОЗ ПОГОДИ")
     if idx < 0:
-        return result
+        raise ValueError('Official forecast missing')
 
-    snippet = re.sub(r"<[^>]+>", " ", text[idx : idx + 2800])
+    content = re.split(r'<!--\s*start rightbar\s*-->', text[idx:], maxsplit=1, flags=re.I)[0]
+    snippet = unescape(re.sub(r"<[^>]+>", " ", content))
     snippet = re.sub(r"\s+", " ", snippet).strip()
 
     m = re.search(
@@ -96,6 +102,8 @@ def fetch_forecast():
     if m:
         result["next"] = m.group(1).strip()
 
+    if not any(value != '—' for value in result.values()):
+        raise ValueError('Official forecast sections missing')
     return result
 
 
@@ -218,34 +226,87 @@ def fetch_city_station(station_id):
     return station
 
 
+def fetch_model(now):
+    result = {'status': 'unavailable', 'checked_at': now.isoformat(),
+              'source': 'https://open-meteo.com/'}
+    try:
+        response = requests.get('https://api.open-meteo.com/v1/forecast', params={
+            'latitude': 48.62, 'longitude': 22.30, 'timezone': 'Europe/Kyiv',
+            'wind_speed_unit': 'ms', 'forecast_days': 7,
+            'current': 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m',
+            'hourly': 'temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,is_day',
+            'daily': 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max',
+        }, timeout=25)
+        response.raise_for_status()
+        model = response.json()
+        current = model['current']
+        for key in ('temperature_2m', 'apparent_temperature', 'weather_code', 'is_day'):
+            if not isinstance(current[key], (int, float)) or not math.isfinite(current[key]):
+                raise ValueError('Invalid model current values')
+        valid = datetime.fromisoformat(current['time']).replace(tzinfo=ZoneInfo('Europe/Kyiv'))
+        if not -900 <= (now - valid).total_seconds() <= 7200:
+            raise ValueError('Stale model current time')
+        for section, keys, minimum in (
+            ('hourly', ('temperature_2m', 'weather_code', 'precipitation_probability'), 24),
+            ('daily', ('temperature_2m_min', 'temperature_2m_max', 'weather_code',
+                       'precipitation_sum', 'precipitation_probability_max', 'wind_speed_10m_max'), 7),
+        ):
+            count = len(model[section]['time'])
+            if count < minimum or any(len(model[section][key]) != count for key in keys):
+                raise ValueError('Incomplete model forecast')
+        result.update(model)
+        result.update(status='ok', checked_at=now.isoformat())
+    except (requests.RequestException, ValueError, KeyError, TypeError, OverflowError) as error:
+        print(f'Open-Meteo unavailable: {error}', file=sys.stderr)
+    return result
+
+
 def main():
-    print("Fetching station data…")
-    rows = fetch_station()
-    print(f"  {len(rows)} rows, latest: {rows[0]['dt'] if rows else '—'}")
-
-    print("Fetching forecast…")
-    forecast = fetch_forecast()
-
     now = datetime.now(timezone.utc)
-    print("Fetching storm warnings…")
-    warnings = fetch_warnings(now.astimezone(ZoneInfo("Europe/Kyiv")))
-    scene = fetch_weather_scene(datetime.now(timezone.utc))
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        city_stations = list(executor.map(fetch_city_station, CITY_STATION_IDS))
+    try:
+        previous = json.loads(OUT.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        previous = {}
+    with ThreadPoolExecutor(max_workers=7) as executor:
+        station_job = executor.submit(fetch_station)
+        forecast_job = executor.submit(fetch_forecast)
+        warning_job = executor.submit(fetch_warnings, now.astimezone(ZoneInfo('Europe/Kyiv')))
+        model_job = executor.submit(fetch_model, now)
+        city_jobs = [executor.submit(fetch_city_station, station_id) for station_id in CITY_STATION_IDS]
+        statuses = {}
+        def collect(name, job, fallback):
+            try:
+                value = job.result()
+                statuses[name] = {'status': 'ok', 'checked_at': now.isoformat()}
+                return value
+            except Exception as error:
+                print(f'{name} unavailable: {error}', file=sys.stderr)
+                old_status = previous.get('source_status', {}).get(name, {})
+                statuses[name] = {'status': 'unavailable', 'checked_at': old_status.get('checked_at')}
+                return previous.get(name, fallback)
+        rows = collect('data', station_job, [])
+        forecast = collect('forecast', forecast_job, {})
+        warnings = warning_job.result()
+        model = model_job.result()
+        city_stations = [job.result() for job in city_jobs]
+    scene = {'status': 'unavailable', 'checked_at': now.isoformat()}
+    if model['status'] == 'ok':
+        valid_at = datetime.fromisoformat(model['current']['time']).replace(tzinfo=ZoneInfo('Europe/Kyiv'))
+        scene.update(status='ok', code=model['current']['weather_code'],
+                     is_day=bool(model['current']['is_day']), valid_at=valid_at.isoformat())
     payload = {
-        "updated_at": now.isoformat(),
-        "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
-        "data": rows,
-        "forecast": forecast,
-        "warnings": warnings,
-        "weather_scene": scene,
-        "city_stations": city_stations,
+        'updated_at': now.isoformat(),
+        'source': 'http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631',
+        'data': rows, 'forecast': forecast, 'warnings': warnings,
+        'weather_scene': scene, 'city_stations': city_stations,
+        'model': model, 'source_status': statuses,
     }
-
-    OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Wrote {OUT}")
+    temporary = OUT.with_suffix('.json.tmp')
+    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False), encoding='utf-8')
+    temporary.replace(OUT)
+    print(f'Wrote {OUT}; observations={len(rows)}, model={model["status"]}')
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())
