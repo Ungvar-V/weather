@@ -4,6 +4,7 @@
 import json
 import re
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, time, timedelta, timezone
 from html import unescape
 from pathlib import Path
@@ -13,6 +14,7 @@ import requests
 
 OUT = Path(__file__).parent / "data.json"
 WARNING_URL = "http://www.gmc.uzhgorod.ua/mstorm.php"
+CITY_STATION_IDS = (21050, 23257, 21765)
 WARNING_LEVELS = {"I": 1, "II": 2, "III": 3, "1": 1, "2": 2, "3": 3}
 MONTHS = (
     "січня", "лютого", "березня", "квітня", "травня", "червня",
@@ -193,6 +195,29 @@ def fetch_weather_scene(now):
     return result
 
 
+def fetch_city_station(station_id):
+    source = f"https://www.saveecobot.com/station/{station_id}.json"
+    station = {"id": station_id, "source": source, "status": "unavailable"}
+    try:
+        response = requests.get(source, timeout=15)
+        response.raise_for_status()
+        data = response.json()
+        if data.get("id") != station_id or not isinstance(data.get("last_data"), list):
+            raise ValueError("Unexpected station response")
+        station.update({key: data.get(key) for key in (
+            "sensor_name", "latitude", "longitude", "platform_name",
+            "aqi", "aqi_is_old", "aqi_updated_at",
+        )})
+        station["last_data"] = [item for item in data["last_data"]
+                                if isinstance(item, dict) and item.get("phenomenon")
+                                in ("temperature", "humidity", "pm25")]
+        station["status"] = "ok"
+    except (requests.RequestException, ValueError, TypeError, AttributeError) as error:
+        print(f"City station {station_id} unavailable: {error}", file=sys.stderr)
+    station["checked_at"] = datetime.now(timezone.utc).isoformat()
+    return station
+
+
 def main():
     print("Fetching station data…")
     rows = fetch_station()
@@ -205,6 +230,8 @@ def main():
     print("Fetching storm warnings…")
     warnings = fetch_warnings(now.astimezone(ZoneInfo("Europe/Kyiv")))
     scene = fetch_weather_scene(datetime.now(timezone.utc))
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        city_stations = list(executor.map(fetch_city_station, CITY_STATION_IDS))
     payload = {
         "updated_at": now.isoformat(),
         "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
@@ -212,6 +239,7 @@ def main():
         "forecast": forecast,
         "warnings": warnings,
         "weather_scene": scene,
+        "city_stations": city_stations,
     }
 
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
