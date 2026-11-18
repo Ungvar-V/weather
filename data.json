@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18T16:01:15.383103+00:00",
+  "updated_at": "2026-11-18T16:15:59.712692+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-18T18:01:15.383103+02:00",
+    "checked_at": "2026-11-18T18:15:59.712692+02:00",
     "items": [
       {
         "text": "НМЯ І: Ввечері 17 листопада та вночі 18 листопада на більшій частині території Закарпатської області очікуються значні дощі (15-29 мм / 12 год чи менше), подекуди сильні дощі (30-49 мм / 12 год чи менше). Вдень 17 листопада та вночі 18 листопада переважно на високогір'ї посилення вітру 15-20 м/с, налипання мокрого снігу (діаметр 11-34 мм) (І рівень небезпечності, жовтий).",
@@ -593,14 +593,14 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-18T18:01:15.383103+02:00"
+    "last_success_at": "2026-11-18T18:15:59.712692+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-18T16:01:15.383103+00:00",
+    "checked_at": "2026-11-18T16:15:59.712692+00:00",
     "code": 0,
     "is_day": false,
-    "valid_at": "2026-11-18T18:00:00+02:00"
+    "valid_at": "2026-11-18T18:15:00+02:00"
   },
   "city_stations": [
     {
@@ -611,30 +611,30 @@
       "latitude": "48.614841137956",
       "longitude": "22.296348480165",
       "platform_name": "ЛУН Місто",
-      "aqi": 11,
+      "aqi": 13,
       "aqi_is_old": false,
-      "aqi_updated_at": "2026-11-18 17:00:00",
+      "aqi_updated_at": "2026-11-18 18:00:00",
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 4.968,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 5.058,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 12.363,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 12.35,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 80.006,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 80.136,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-18T16:01:15.966588+00:00"
+      "checked_at": "2026-11-18T16:16:00.539156+00:00"
     },
     {
       "id": 23257,
@@ -646,28 +646,28 @@
       "platform_name": "ЛУН Місто",
       "aqi": 8,
       "aqi_is_old": false,
-      "aqi_updated_at": "2026-11-18 17:00:00",
+      "aqi_updated_at": "2026-11-18 18:00:00",
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.204,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 2.281,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 12.223,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 12.169,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 82.226,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 82.97,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-18T16:01:15.904575+00:00"
+      "checked_at": "2026-11-18T16:16:00.534311+00:00"
     },
     {
       "id": 21765,
@@ -677,39 +677,39 @@
       "latitude": "48.624323038432",
       "longitude": "22.301197092573",
       "platform_name": "ЛУН Місто",
-      "aqi": 18,
+      "aqi": 24,
       "aqi_is_old": false,
-      "aqi_updated_at": "2026-11-18 17:00:00",
+      "aqi_updated_at": "2026-11-18 18:00:00",
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 16.957,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 22.922,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 10.467,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 10.691,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 97.686,
-          "updated_at": "2026-11-18 17:58:00",
+          "value": 97.02,
+          "updated_at": "2026-11-18 18:13:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-18T16:01:15.910610+00:00"
+      "checked_at": "2026-11-18T16:16:00.510052+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-18T16:01:15.383103+00:00",
+    "checked_at": "2026-11-18T16:15:59.712692+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 1.3120174407958984,
+    "generationtime_ms": 2.065420150756836,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -729,18 +729,18 @@
       "wind_gusts_10m": "m/s"
     },
     "current": {
-      "time": "2026-11-18T18:00",
+      "time": "2026-11-18T18:15",
       "interval": 900,
-      "temperature_2m": 9.5,
+      "temperature_2m": 9.1,
       "relative_humidity_2m": 94,
-      "apparent_temperature": 8.9,
+      "apparent_temperature": 8.4,
       "is_day": 0,
       "precipitation": 0.0,
       "weather_code": 0,
-      "pressure_msl": 992.6,
-      "wind_speed_10m": 0.5,
-      "wind_direction_10m": 61,
-      "wind_gusts_10m": 2.9
+      "pressure_msl": 992.7,
+      "wind_speed_10m": 0.4,
+      "wind_direction_10m": 72,
+      "wind_gusts_10m": 2.2
     },
     "hourly_units": {
       "time": "iso8601",
@@ -2021,11 +2021,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-18T16:01:15.383103+00:00"
+      "checked_at": "2026-11-18T16:15:59.712692+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-18T16:01:15.383103+00:00"
+      "checked_at": "2026-11-18T16:15:59.712692+00:00"
     }
   }
 }
