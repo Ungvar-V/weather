@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-19T02:30:58.830692+00:00",
+  "updated_at": "2026-11-19T02:45:40.905390+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,18 +570,18 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-19T04:30:58.830692+02:00",
+    "checked_at": "2026-11-19T04:45:40.905390+02:00",
     "items": [],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-19T04:30:58.830692+02:00"
+    "last_success_at": "2026-11-19T04:45:40.905390+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-19T02:30:58.830692+00:00",
+    "checked_at": "2026-11-19T02:45:40.905390+00:00",
     "code": 0,
     "is_day": false,
-    "valid_at": "2026-11-19T04:30:00+02:00"
+    "valid_at": "2026-11-19T04:45:00+02:00"
   },
   "city_stations": [
     {
@@ -598,24 +598,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 3.733,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 2.719,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 10.758,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 10.629,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 76.582,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 77.854,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-19T02:30:59.460671+00:00"
+      "checked_at": "2026-11-19T02:45:41.696481+00:00"
     },
     {
       "id": 23257,
@@ -631,24 +631,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.826,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 2.495,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 9.625,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 9.592,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 81.86,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 81.797,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-19T02:30:59.496624+00:00"
+      "checked_at": "2026-11-19T02:45:41.758492+00:00"
     },
     {
       "id": 21765,
@@ -664,33 +664,33 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 11.089,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 10.216,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 7.304,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 7.093,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 96.053,
-          "updated_at": "2026-11-19 04:28:00",
+          "value": 96.423,
+          "updated_at": "2026-11-19 04:43:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-19T02:30:59.476245+00:00"
+      "checked_at": "2026-11-19T02:45:41.666491+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-19T02:30:58.830692+00:00",
+    "checked_at": "2026-11-19T02:45:40.905390+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 0.845789909362793,
+    "generationtime_ms": 1.3005733489990234,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -710,18 +710,18 @@
       "wind_gusts_10m": "m/s"
     },
     "current": {
-      "time": "2026-11-19T04:30",
+      "time": "2026-11-19T04:45",
       "interval": 900,
-      "temperature_2m": 6.4,
+      "temperature_2m": 6.3,
       "relative_humidity_2m": 95,
-      "apparent_temperature": 3.9,
+      "apparent_temperature": 3.8,
       "is_day": 0,
       "precipitation": 0.0,
       "weather_code": 0,
-      "pressure_msl": 998.6,
+      "pressure_msl": 998.7,
       "wind_speed_10m": 2.7,
-      "wind_direction_10m": 137,
-      "wind_gusts_10m": 4.9
+      "wind_direction_10m": 136,
+      "wind_gusts_10m": 5.2
     },
     "hourly_units": {
       "time": "iso8601",
@@ -2002,11 +2002,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-19T02:30:58.830692+00:00"
+      "checked_at": "2026-11-19T02:45:40.905390+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-19T02:30:58.830692+00:00"
+      "checked_at": "2026-11-19T02:45:40.905390+00:00"
     }
   }
 }
