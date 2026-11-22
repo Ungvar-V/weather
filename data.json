@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22T04:45:42.050856+00:00",
+  "updated_at": "2026-11-22T05:01:12.223317+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-22T06:45:42.050856+02:00",
+    "checked_at": "2026-11-22T07:01:12.223317+02:00",
     "items": [
       {
         "text": "НМЯ І: Вночі та вранці 22 листопада на більшості доріг Закарпатської області та по м. Ужгороду очікується ожеледиця (І рівень небезпечності, жовтий).",
@@ -581,14 +581,14 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-22T06:45:42.050856+02:00"
+    "last_success_at": "2026-11-22T07:01:12.223317+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-22T04:45:42.050856+00:00",
+    "checked_at": "2026-11-22T05:01:12.223317+00:00",
     "code": 0,
     "is_day": false,
-    "valid_at": "2026-11-22T06:45:00+02:00"
+    "valid_at": "2026-11-22T07:00:00+02:00"
   },
   "city_stations": [
     {
@@ -622,7 +622,7 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-22T04:45:42.570165+00:00"
+      "checked_at": "2026-11-22T05:01:12.769894+00:00"
     },
     {
       "id": 23257,
@@ -655,7 +655,7 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-22T04:45:42.593099+00:00"
+      "checked_at": "2026-11-22T05:01:12.756932+00:00"
     },
     {
       "id": 21765,
@@ -688,16 +688,16 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-22T04:45:42.582128+00:00"
+      "checked_at": "2026-11-22T05:01:12.782548+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-22T04:45:42.050856+00:00",
+    "checked_at": "2026-11-22T05:01:12.223317+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 0.8455514907836914,
+    "generationtime_ms": 0.6715059280395508,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -717,18 +717,18 @@
       "wind_gusts_10m": "m/s"
     },
     "current": {
-      "time": "2026-11-22T06:45",
+      "time": "2026-11-22T07:00",
       "interval": 900,
-      "temperature_2m": 0.8,
+      "temperature_2m": 0.7,
       "relative_humidity_2m": 89,
-      "apparent_temperature": -2.9,
+      "apparent_temperature": -3.0,
       "is_day": 0,
       "precipitation": 0.0,
       "weather_code": 0,
-      "pressure_msl": 1016.2,
+      "pressure_msl": 1016.1,
       "wind_speed_10m": 2.8,
-      "wind_direction_10m": 132,
-      "wind_gusts_10m": 6.0
+      "wind_direction_10m": 129,
+      "wind_gusts_10m": 5.9
     },
     "hourly_units": {
       "time": "iso8601",
@@ -2009,11 +2009,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-22T04:45:42.050856+00:00"
+      "checked_at": "2026-11-22T05:01:12.223317+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-22T04:45:42.050856+00:00"
+      "checked_at": "2026-11-22T05:01:12.223317+00:00"
     }
   }
 }
