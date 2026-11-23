@@ -1,7 +1,17 @@
 {
-  "updated_at": "2026-11-23T18:01:18.706830+00:00",
+  "updated_at": "2026-11-23T18:15:45.728304+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
+    {
+      "dt": "23.11.2026 20:00",
+      "temp": "1.2",
+      "dew": "-1.9",
+      "precip": ".0 (12)",
+      "pressure": "1015.8",
+      "wind_dir": "300",
+      "wind_speed": "3",
+      "rad": null
+    },
     {
       "dt": "23.11.2026 17:00",
       "temp": "2.4",
@@ -560,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-23T20:01:18.706830+02:00",
+    "checked_at": "2026-11-23T20:15:45.728304+02:00",
     "items": [
       {
         "text": "НМЯ І: Вночі та вранці 23 листопада на більшості доріг Закарпатської області та по м. Ужгороду очікується ожеледиця (І рівень небезпечності, жовтий).",
@@ -571,14 +581,14 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-23T20:01:18.706830+02:00"
+    "last_success_at": "2026-11-23T20:15:45.728304+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-23T18:01:18.706830+00:00",
+    "checked_at": "2026-11-23T18:15:45.728304+00:00",
     "code": 0,
     "is_day": false,
-    "valid_at": "2026-11-23T20:00:00+02:00"
+    "valid_at": "2026-11-23T20:15:00+02:00"
   },
   "city_stations": [
     {
@@ -595,24 +605,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.389,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 2.92,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 4.267,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 4.619,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 64.443,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 63.641,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T18:01:19.504860+00:00"
+      "checked_at": "2026-11-23T18:15:46.417458+00:00"
     },
     {
       "id": 23257,
@@ -628,24 +638,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.418,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 2.381,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 4.189,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 4.417,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 68.761,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 67.942,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T18:01:19.530132+00:00"
+      "checked_at": "2026-11-23T18:15:46.406888+00:00"
     },
     {
       "id": 21765,
@@ -661,33 +671,33 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 3.552,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 3.509,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 3.732,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 3.978,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 77.822,
-          "updated_at": "2026-11-23 19:58:00",
+          "value": 76.777,
+          "updated_at": "2026-11-23 20:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T18:01:19.501289+00:00"
+      "checked_at": "2026-11-23T18:15:46.413922+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-23T18:01:18.706830+00:00",
+    "checked_at": "2026-11-23T18:15:45.728304+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 1.8199682235717773,
+    "generationtime_ms": 0.5899667739868164,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -707,18 +717,18 @@
       "wind_gusts_10m": "m/s"
     },
     "current": {
-      "time": "2026-11-23T20:00",
+      "time": "2026-11-23T20:15",
       "interval": 900,
-      "temperature_2m": 0.6,
-      "relative_humidity_2m": 80,
-      "apparent_temperature": -2.7,
+      "temperature_2m": 0.4,
+      "relative_humidity_2m": 81,
+      "apparent_temperature": -2.8,
       "is_day": 0,
       "precipitation": 0.0,
       "weather_code": 0,
-      "pressure_msl": 1015.2,
-      "wind_speed_10m": 1.6,
-      "wind_direction_10m": 312,
-      "wind_gusts_10m": 5.4
+      "pressure_msl": 1015.4,
+      "wind_speed_10m": 1.5,
+      "wind_direction_10m": 309,
+      "wind_gusts_10m": 4.5
     },
     "hourly_units": {
       "time": "iso8601",
@@ -1999,11 +2009,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-23T18:01:18.706830+00:00"
+      "checked_at": "2026-11-23T18:15:45.728304+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-23T18:01:18.706830+00:00"
+      "checked_at": "2026-11-23T18:15:45.728304+00:00"
     }
   }
 }
