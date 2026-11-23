@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T03:59:57.109920+00:00",
+  "updated_at": "2026-11-23T04:01:16.096657+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-23T05:59:57.109920+02:00",
+    "checked_at": "2026-11-23T06:01:16.096657+02:00",
     "items": [
       {
         "text": "НМЯ І: Вночі та вранці 23 листопада на більшості доріг Закарпатської області та по м. Ужгороду очікується ожеледиця (І рівень небезпечності, жовтий).",
@@ -581,14 +581,14 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-23T05:59:57.109920+02:00"
+    "last_success_at": "2026-11-23T06:01:16.096657+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-23T03:59:57.109920+00:00",
+    "checked_at": "2026-11-23T04:01:16.096657+00:00",
     "code": 3,
     "is_day": false,
-    "valid_at": "2026-11-23T05:45:00+02:00"
+    "valid_at": "2026-11-23T06:00:00+02:00"
   },
   "city_stations": [
     {
@@ -622,7 +622,7 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T03:59:57.746606+00:00"
+      "checked_at": "2026-11-23T04:01:16.698213+00:00"
     },
     {
       "id": 23257,
@@ -655,7 +655,7 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T03:59:57.745540+00:00"
+      "checked_at": "2026-11-23T04:01:16.726466+00:00"
     },
     {
       "id": 21765,
@@ -688,16 +688,16 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T03:59:57.772058+00:00"
+      "checked_at": "2026-11-23T04:01:16.728088+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-23T03:59:57.109920+00:00",
+    "checked_at": "2026-11-23T04:01:16.096657+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 15.809893608093262,
+    "generationtime_ms": 15.303850173950195,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -717,17 +717,17 @@
       "wind_gusts_10m": "m/s"
     },
     "current": {
-      "time": "2026-11-23T05:45",
+      "time": "2026-11-23T06:00",
       "interval": 900,
       "temperature_2m": 1.9,
       "relative_humidity_2m": 76,
-      "apparent_temperature": -2.2,
+      "apparent_temperature": -2.3,
       "is_day": 0,
       "precipitation": 0.0,
       "weather_code": 3,
       "pressure_msl": 1006.8,
       "wind_speed_10m": 3.3,
-      "wind_direction_10m": 335,
+      "wind_direction_10m": 332,
       "wind_gusts_10m": 6.5
     },
     "hourly_units": {
@@ -2009,11 +2009,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-23T03:59:57.109920+00:00"
+      "checked_at": "2026-11-23T04:01:16.096657+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-23T03:59:57.109920+00:00"
+      "checked_at": "2026-11-23T04:01:16.096657+00:00"
     }
   }
 }
