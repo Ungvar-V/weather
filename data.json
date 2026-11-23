@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T01:01:40.720752+00:00",
+  "updated_at": "2026-11-23T01:15:40.823432+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-23T03:01:40.720752+02:00",
+    "checked_at": "2026-11-23T03:15:40.823432+02:00",
     "items": [
       {
         "text": "НМЯ І: Вночі та вранці 23 листопада на більшості доріг Закарпатської області та по м. Ужгороду очікується ожеледиця (І рівень небезпечності, жовтий).",
@@ -581,14 +581,14 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-23T03:01:40.720752+02:00"
+    "last_success_at": "2026-11-23T03:15:40.823432+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-23T01:01:40.720752+00:00",
+    "checked_at": "2026-11-23T01:15:40.823432+00:00",
     "code": 3,
     "is_day": false,
-    "valid_at": "2026-11-23T03:00:00+02:00"
+    "valid_at": "2026-11-23T03:15:00+02:00"
   },
   "city_stations": [
     {
@@ -599,30 +599,30 @@
       "latitude": "48.614841137956",
       "longitude": "22.296348480165",
       "platform_name": "ЛУН Місто",
-      "aqi": 18,
+      "aqi": 16,
       "aqi_is_old": false,
-      "aqi_updated_at": "2026-11-23 02:00:00",
+      "aqi_updated_at": "2026-11-23 03:00:00",
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 3.084,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 2.789,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 3.73,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 3.645,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 73.336,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 73.112,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T01:01:41.502119+00:00"
+      "checked_at": "2026-11-23T01:15:41.351749+00:00"
     },
     {
       "id": 23257,
@@ -632,30 +632,30 @@
       "latitude": "48.61748339562",
       "longitude": "22.263592633062",
       "platform_name": "ЛУН Місто",
-      "aqi": 12,
+      "aqi": 11,
       "aqi_is_old": false,
-      "aqi_updated_at": "2026-11-23 02:00:00",
+      "aqi_updated_at": "2026-11-23 03:00:00",
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.468,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 2.595,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 4.457,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 4.342,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 74.6,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 74.75,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T01:01:41.529055+00:00"
+      "checked_at": "2026-11-23T01:15:41.359620+00:00"
     },
     {
       "id": 21765,
@@ -665,39 +665,39 @@
       "latitude": "48.624323038432",
       "longitude": "22.301197092573",
       "platform_name": "ЛУН Місто",
-      "aqi": 38,
+      "aqi": 32,
       "aqi_is_old": false,
-      "aqi_updated_at": "2026-11-23 02:00:00",
+      "aqi_updated_at": "2026-11-23 03:00:00",
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 5.406,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 4.757,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 3.403,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 3.307,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 84.611,
-          "updated_at": "2026-11-23 02:59:00",
+          "value": 84.527,
+          "updated_at": "2026-11-23 03:12:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T01:01:41.494150+00:00"
+      "checked_at": "2026-11-23T01:15:41.324143+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-23T01:01:40.720752+00:00",
+    "checked_at": "2026-11-23T01:15:40.823432+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 1.2530088424682617,
+    "generationtime_ms": 7.820010185241699,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -717,7 +717,7 @@
       "wind_gusts_10m": "m/s"
     },
     "current": {
-      "time": "2026-11-23T03:00",
+      "time": "2026-11-23T03:15",
       "interval": 900,
       "temperature_2m": 2.1,
       "relative_humidity_2m": 83,
@@ -725,10 +725,10 @@
       "is_day": 0,
       "precipitation": 0.0,
       "weather_code": 3,
-      "pressure_msl": 1006.9,
-      "wind_speed_10m": 2.0,
-      "wind_direction_10m": 350,
-      "wind_gusts_10m": 3.9
+      "pressure_msl": 1006.7,
+      "wind_speed_10m": 1.9,
+      "wind_direction_10m": 347,
+      "wind_gusts_10m": 3.7
     },
     "hourly_units": {
       "time": "iso8601",
@@ -2009,11 +2009,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-23T01:01:40.720752+00:00"
+      "checked_at": "2026-11-23T01:15:40.823432+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-23T01:01:40.720752+00:00"
+      "checked_at": "2026-11-23T01:15:40.823432+00:00"
     }
   }
 }
