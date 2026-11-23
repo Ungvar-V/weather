@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T06:45:44.465849+00:00",
+  "updated_at": "2026-11-23T07:01:20.464090+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-23T08:45:44.465849+02:00",
+    "checked_at": "2026-11-23T09:01:20.464090+02:00",
     "items": [
       {
         "text": "НМЯ І: Вночі та вранці 23 листопада на більшості доріг Закарпатської області та по м. Ужгороду очікується ожеледиця (І рівень небезпечності, жовтий).",
@@ -581,11 +581,11 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-23T08:45:44.465849+02:00"
+    "last_success_at": "2026-11-23T09:01:20.464090+02:00"
   },
   "weather_scene": {
     "status": "unavailable",
-    "checked_at": "2026-11-23T06:45:44.465849+00:00"
+    "checked_at": "2026-11-23T07:01:20.464090+00:00"
   },
   "city_stations": [
     {
@@ -602,24 +602,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.205,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 2.046,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 4.449,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 4.448,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 56.614,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 56.71,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T06:45:45.241575+00:00"
+      "checked_at": "2026-11-23T07:01:21.238469+00:00"
     },
     {
       "id": 23257,
@@ -635,24 +635,24 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 1.82,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 1.751,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 4.653,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 4.787,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 60.771,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 59.843,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T06:45:45.277447+00:00"
+      "checked_at": "2026-11-23T07:01:21.254927+00:00"
     },
     {
       "id": 21765,
@@ -668,39 +668,39 @@
       "last_data": [
         {
           "phenomenon": "pm25",
-          "value": 2.952,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 3.065,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         },
         {
           "phenomenon": "temperature",
-          "value": 3.738,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 3.685,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         },
         {
           "phenomenon": "humidity",
-          "value": 70.67,
-          "updated_at": "2026-11-23 08:43:00",
+          "value": 70.658,
+          "updated_at": "2026-11-23 08:59:00",
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-23T06:45:45.238277+00:00"
+      "checked_at": "2026-11-23T07:01:21.205852+00:00"
     }
   ],
   "model": {
     "status": "unavailable",
-    "checked_at": "2026-11-23T06:45:44.465849+00:00",
+    "checked_at": "2026-11-23T07:01:20.464090+00:00",
     "source": "https://open-meteo.com/"
   },
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-23T06:45:44.465849+00:00"
+      "checked_at": "2026-11-23T07:01:20.464090+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-23T06:45:44.465849+00:00"
+      "checked_at": "2026-11-23T07:01:20.464090+00:00"
     }
   }
 }
