@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T00:15:40.622270+00:00",
+  "updated_at": "2026-11-26T00:16:22.414237+00:00",
   "source": "http://www.gmc.uzhgorod.ua/metdata.php?StNo=33631",
   "data": [
     {
@@ -570,7 +570,7 @@
   },
   "warnings": {
     "source": "http://www.gmc.uzhgorod.ua/mstorm.php",
-    "checked_at": "2026-11-26T02:15:40.622270+02:00",
+    "checked_at": "2026-11-26T02:16:22.414237+02:00",
     "items": [
       {
         "text": "НМЯ І: Вночі та вранці 26 листопада на більшості доріг Закарпатської області та по м. Ужгороду очікується ожеледиця (І рівень небезпечності, жовтий).",
@@ -581,11 +581,11 @@
     ],
     "unparsed": [],
     "status": "ok",
-    "last_success_at": "2026-11-26T02:15:40.622270+02:00"
+    "last_success_at": "2026-11-26T02:16:22.414237+02:00"
   },
   "weather_scene": {
     "status": "ok",
-    "checked_at": "2026-11-26T00:15:40.622270+00:00",
+    "checked_at": "2026-11-26T00:16:22.414237+00:00",
     "code": 1,
     "is_day": false,
     "valid_at": "2026-11-26T02:15:00+02:00"
@@ -622,7 +622,7 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-26T00:15:41.258913+00:00"
+      "checked_at": "2026-11-26T00:16:23.163145+00:00"
     },
     {
       "id": 23257,
@@ -655,7 +655,7 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-26T00:15:41.265559+00:00"
+      "checked_at": "2026-11-26T00:16:23.131318+00:00"
     },
     {
       "id": 21765,
@@ -688,16 +688,16 @@
           "is_old": false
         }
       ],
-      "checked_at": "2026-11-26T00:15:41.272545+00:00"
+      "checked_at": "2026-11-26T00:16:23.176755+00:00"
     }
   ],
   "model": {
     "status": "ok",
-    "checked_at": "2026-11-26T00:15:40.622270+00:00",
+    "checked_at": "2026-11-26T00:16:22.414237+00:00",
     "source": "https://open-meteo.com/",
     "latitude": 48.61225,
     "longitude": 22.297363,
-    "generationtime_ms": 1.314997673034668,
+    "generationtime_ms": 0.48351287841796875,
     "utc_offset_seconds": 7200,
     "timezone": "Europe/Kyiv",
     "timezone_abbreviation": "GMT+2",
@@ -2009,11 +2009,11 @@
   "source_status": {
     "data": {
       "status": "ok",
-      "checked_at": "2026-11-26T00:15:40.622270+00:00"
+      "checked_at": "2026-11-26T00:16:22.414237+00:00"
     },
     "forecast": {
       "status": "ok",
-      "checked_at": "2026-11-26T00:15:40.622270+00:00"
+      "checked_at": "2026-11-26T00:16:22.414237+00:00"
     }
   }
 }
